@@ -9,7 +9,7 @@
 </head>
 
 <div id="header">{% block header %}{% include "header.html" %}{% endblock %}</div>
-<div id="content" style="min-height: 72.1vh">
+<div id="content" style="min-height: 100vh">
     {% with messages = get_flashed_messages() %}
 	  {% if messages %}
 	    {% for message in messages %}
