@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<body>
+    <div class="row">
+        <div class="col-md-12">
+            <div id="carousel-example-generic" class="carousel slide"
+                data-ride="carousel">
+                <ol class="carousel-indicators">
+                        <li data-target="#carousel-example-generic" data-slide-to="0"
+                            class="active"></li>
+
+                        <li data-target="#carousel-example-generic" data-slide-to="1"
+                            class="active"></li>
+
+                        <li data-target="#carousel-example-generic" data-slide-to="2"
+                            class="active"></li>
+                </ol>
+
+                <div class="carousel-inner">
+                        <div class="item active" alt="">
+                            <div style="text-align: center; margin-right: 000px; margin-bottom: 50px; color: #3c3c3c;font-family: Impact; font-size: 70px">
+                                <a href="/komputery" style="color: #3c3c3c; text-decoration: none"  >
+                                <img src="{{ url_for('static', filename='images/msi-aegis-ti3-2.jpg') }}" width="400px" height="300px" />
+                                    Komputery
+                                </a>
+                            </div>
+                        </div>
+                        <div class="item " alt="">
+                            <div style="text-align: center; margin-right: 000px; margin-bottom: 50px; color: #3c3c3c;font-family: Impact; font-size: 70px">
+                                <a href="/laptopy" style="color: #3c3c3c; text-decoration: none"  >
+                                    <img src="{{ url_for('static', filename='images/1539886831_1411807.jpg') }}" width="400px" height="300px" />
+                                    Laptopy
+                                </a>
+                            </div>
+                        </div>
+                        <div class="item " alt="">
+                            <div style="text-align: center; margin-right: 000px; margin-bottom: 50px; color: #3c3c3c;font-family: Impact; font-size: 70px">
+                                <a href="/monitory" style="color: #3c3c3c; text-decoration: none"  >
+                                <img src="{{ url_for('static', filename='images/product_2_20171121150244_5a13cf94d3eaf.png') }}" width="400px" height="300px" />
+                                    Monitory
+                                </a>
+                            </div>
+                        </div>
+                </div>
+
+                <a class="left carousel-control" href="#carousel-example-generic"
+                    role="button" data-slide="prev">
+                    <span class="glyphicon glyphicon-chevron-left"></span>
+                </a>
+                <a class="right carousel-control" href="#carousel-example-generic"
+                    role="button" data-slide="next">
+                    <span class="glyphicon glyphicon-chevron-right"></span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-3"></div>
+      <div class="col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading"  style="text-align: center; font-family: Impact;">
+                 <h1>
+                     O nas
+                 </h1>
+            </div>
+            <div class="panel-body" style="text-align: justify;color: #3c3c3c">
+                  <p style="font-family: Arial;text-align: justify-all; font-size: large">Nasza historia rozpoczęła się w 2019 roku z chwilą otwarcia strony internetowej.
+                  Od tej pory nieustannie się rozwijamy, dzięki czemu staliśmy się ekspertami w branży komputerowej.
+                  Łączymy empatię i technologię, co pozwala nam lepiej rozumieć potrzeby Klientów.
+                      Jesteśmy otwarci na sugestie i oferujemy rozwiązania, zapewniające 100% satysfakcji.</p>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-3"></div>
+      <div class="col-md-6">
+          <div class="panel panel-default" style="text-align: justify; color: #3c3c3c;font-family: Arial">
+                <div class="panel-heading" style="text-align: center; font-family: Impact">
+                    <h1>
+                        Dlaczego my?
+                    </h1>
+                </div>
+
+                <div class="panel-body" style="margin-top: 30px">
+                        <img style="max-width:100px; margin-top: 40px; margin-left: 20px;  float: left" src="{{ url_for('static', filename='images/1.png') }}">
+                        <p style="font-family: Impact; margin-left: 150px; text-align: left; font-size: x-large">
+                            Twoja satysfakcja jest najważniejsza
+                        </p>
+                        <p style="font-family: Arial; margin-left: 150px; margin-right: 50px; text-align: justify-all; font-size: large">
+                            Od początku działalności priorytetem jest dla nas zadowolenie naszych Klientów.
+                            Właśnie to wyróżnia nas na tle konkurencji. Możemy pochwalić się setkami pozytywnych komentarzy na nasz temat oraz nagrodami,
+                            które otrzymaliśmy za sprawą zadowolonych Klientów.
+                        </p>
+                </div>
+
+                <div class="panel-body" style="margin-top: 30px">
+                        <img style="max-width:100px; margin-top: 20px; margin-left: 20px; float: left" src="{{ url_for('static', filename='images/2.png') }}">
+                        <p style="font-family: Impact; margin-left: 150px; text-align: left; font-size: x-large">
+                            Oferujemy szeroki wybór i najlepsze ceny
+                        </p>
+                        <p style="font-family: Arial; margin-left: 150px; margin-right: 50px; text-align: justify-all; font-size: large">
+                            Znajdziesz u nas szeroką gamę produktów, którą nieustannie poszerzamy o kolejne nowości.
+                            Oferujemy również najlepsze ceny na rynku.
+                        </p>
+                </div>
+            </div>
+      </div>
+    </div>
+
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+</body>
+
+{%  endblock %}
+
+
+

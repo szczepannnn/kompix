@@ -1,0 +1,43 @@
+<a role="presentation" class="active" data-toggle="modal" data-target="#register" href="#"><span class="glyphicon glyphicon-pencil"></span> Rejestracja </a>
+<div class="modal fade" id="register" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+        <h4 class="modal-title" id="exampleModalLabel">Rejestracja</h4>
+      </div>
+      <div class="modal-body">
+          <div class="container">
+                <form method=post action="/register">
+                  <dl>
+                      <dt><label for="username">Nazwa użytkownika</label>
+                      <dd><input id="username" name="username" type="text" value="">
+                      </dd>
+
+                      <p></p>
+                      <dt><label for="email">Adres e-mail</label>
+                      <dd><input id="email" name="email" type="text" value="">
+                      </dd>
+
+                      <p></p>
+                      <dt><label for="password">Hasło</label>
+                      <dd><input id="password" name="password" type="password" value="">
+                      </dd>
+
+                      <p></p>
+                      <dt><label for="confirm">Powtórz hasło</label>
+                      <dd><input id="confirm" name="confirm" type="password" value="">
+                      </dd>
+
+                      <p></p>
+                      <dt><label for="accept_tos">Akceptuję <a href="/regulamin" target="blank">regulamin sklepu</a> (zaktualizowane 15.08.2019)</label>
+                      <dd><input id="accept_tos" name="accept_tos" type="checkbox" value="y">
+                      </dd>
+                  </dl>
+                  <p><input type=submit value=Zarejestruj>
+                 </form>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
