@@ -34,14 +34,14 @@ def login_page():
 
 
 class RegistrationForm(Form):
-    username = TextField('Nazwa użytkownika', [validators.Length(min=4, max=20)])
-    email = TextField('Adres e-mail', [validators.Length(min=6, max=50)])
-    password = PasswordField('Nowe hasło', [
+    username = TextField('Nazwa użytkownika:', [validators.Length(min=4, max=20)])
+    email = TextField('Adres e-mail:', [validators.Length(min=6, max=50)])
+    password = PasswordField('Hasło:', [validators.Length(min=6, max=50),
         validators.Required(),
-        validators.EqualTo('confirm', message='Hasła muszą sie zgadzać')
+        validators.EqualTo('confirm', message='Hasła muszą sie zgadzać!')
     ])
-    confirm = PasswordField('Powtórz hasło')
-    accept_tos = BooleanField('Akceptuję <a href="/regulamin/">regulamin sklepu</a> (zaktualizowane 15.08.2019)', [validators.Required()])
+    confirm = PasswordField('Powtórz hasło:')
+    accept_tos = BooleanField('Akceptuję <a href="/regulamin/">regulamin sklepu</a> (zaktualizowane 15.08.2019).', [validators.Required()])
 
 
 @app.route('/register/', methods=["GET", "POST"])

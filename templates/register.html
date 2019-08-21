@@ -1,29 +1,41 @@
 {% extends "base.html" %}
-
+{% import "bootstrap/wtf.html" as wtf %}
 {% block content %}
 
+<div class="row">
+    <div class="col-xs-1 col-sm-2 col-md-3 col-lg-4 col-xl-5" align="center" > </div>
+    <div class="col-xs-10 col-sm-8 col-md-6 col-lg-4 col-xl-2" align="center" >
+        <br>
+        <h3>Zarejestruj się</h3>
+        <br>
+    </div>
+</div>
 
-<body>
-	<div class = "container">
-		<h4>Register</h4>
-		<br>
-		{% from "_formhelpers.html" import render_field %}
-		<form method=post action="/register/">
-			<dl>
-				{{render_field(form.username)}}
-				{{render_field(form.email)}}
-				{{render_field(form.password)}}
-				{{render_field(form.confirm)}}
-				{{render_field(form.accept_tos)}}
+<div class="row">
+    <div class="col-xs-1 col-sm-2 col-md-3 col-lg-4 col-xl-5" align="center" > </div>
+    <div class="col-xs-10 col-sm-8 col-md-6 col-lg-4 col-xl-2" align="center" >
+        <div class="container-fluid">
+            <form method=post action="/register/" class="form" role="form">
+			{{ form.csrf_token }}
+            <dl>
+				{{wtf.form_field(form.username, class='form-control', placeholder='Nazwa użytkownika' )}}
+                {{wtf.form_field(form.email, class='form-control', placeholder='E-mail' )}}
+                {{wtf.form_field(form.password, class='form-control', placeholder='Hasło' )}}
+                {{wtf.form_field(form.confirm, class='form-control', placeholder='Powtórz hasło' )}}
+                {{wtf.form_field(form.accept_tos, class='form-check-label')}}
 			</dl>
-			<p><input type=submit value=Register></p>
+			<p><input type=submit class='btn btn-primary btn-primary'>
 		</form>
 
 		{% if error %}
-			<p class="error"><strong>Error:</strong>{{error}}</p>
+			<p class="error"><strong>Błąd:</strong>{{error}}</p>
 		{% endif %}
+        </div>
+        <p> {{ error }}</p>
+    </div>
+</div>
 
-	</div>
-</body>
+
+
 
 {%  endblock %}
