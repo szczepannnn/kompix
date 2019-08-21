@@ -58,14 +58,14 @@ def register_page():
             c.execute("SELECT * FROM users WHERE username = (%s)", (username,))
 
             if c.rowcount > 0:
-                flash("That username is already taken, please choose another")
+                flash("Ta nazwa użytkownika jest już zajęta, wybierz inną.")
                 return render_template('register.html', form=form)
 
             else:
                 c.execute("INSERT INTO users (username, password, email) VALUES (%s, %s, %s) ", (username, password, email))
                 print("Inserted", c.rowcount, "row(s) of data.")
                 conn.commit()
-                flash("Thanks for registering!")
+                flash("Dziękujemy za rejestrację!")
                 c.close()
                 conn.close()
                 gc.collect()
