@@ -2,35 +2,64 @@ from flask import Flask, render_template, flash, request, url_for, redirect, ses
 from dbconnect import connection
 from wtforms import Form, PasswordField, BooleanField, TextField, validators
 from passlib.hash import sha256_crypt
+from functools import wraps
 import gc
 
 app = Flask(__name__)
 app.secret_key = 'super secret key'
+
 
 @app.route('/')
 def homepage():
     return render_template("homepage.html")
 
 
+def login_required(f):
+    @wraps(f)
+    def wrap(*args, **kwargs):
+        if 'logged_in' in session:
+            return f(*args, **kwargs)
+        else:
+            flash("Musisz być zalogowany.")
+            return redirect(url_for('login_page'))
+    return wrap
+
+
+@app.route('/logout/')
+@login_required
+def logout():
+    session.clear()
+    flash("Wylogowanie przebiegło pomyślnie")
+    gc.collect()
+    return redirect(url_for('homepage'))
+
+
 @app.route('/login/', methods=["GET", "POST"])
 def login_page():
     error = ''
     try:
+        c, conn = connection()
         if request.method == "POST":
-            attempted_username = request.form['username']
-            attempted_password = request.form['password']
 
-            #flash(attempted_username)
-            #flash(attempted_password)
+            data = c.execute("SELECT * FROM users WHERE username = (%s)", (request.form['username'],))
+            data = c.fetchone()[2]
 
-            if attempted_username == "admin" and attempted_password == 'admin':
-                return redirect(url_for('homepage'))
+            if sha256_crypt.verify(request.form['password'], data):
+                session['logged_in'] = True
+                session['username'] = request.form['username']
+                flash("Logowanie przebiegło pomyślnie.")
+                return redirect(url_for("homepage"))
             else:
-                error = 'Niepoprawna kombinacja nazwy użytkownika i hasła. Spróbuj ponownie.'
-        return render_template("login.html", error=error)
+                error = "Niepoprawne dane logowania, spróbuj ponownie."
+                flash(error)
+        gc.collect()
+
+        return render_template("login.html")
 
     except Exception as e:
-        return render_template("login.html", error=error)
+        error = "Niepoprawne dane logowania, spróbuj ponownie."
+        flash(error)
+        return render_template("login.html")
 
 
 class RegistrationForm(Form):

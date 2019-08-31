@@ -50,9 +50,14 @@
 
                 <ul class="nav navbar-nav navbar-right">
                     <div style="margin-top: 15px; height: 44px; margin-right: 10px; margin-left: 15px"   class="container-fluid">
-                        <a href="/koszyk"><span class="glyphicon glyphicon-shopping-cart"></span> Twój koszyk&nbsp;&nbsp;&nbsp;</a>
-                        <a href="/login"><span class="glyphicon glyphicon-log-in"></span> Logowanie&nbsp;&nbsp;&nbsp;</a>
-                        <a href="/register"><span class="glyphicon glyphicon-pencil"></span> Rejestracja </a>
+                        {% if session.logged_in %}
+                            <a href="/koszyk"><span class="glyphicon glyphicon-shopping-cart"></span> Twój koszyk&nbsp;&nbsp;&nbsp;</a>
+                            <a href="/logout"><span class="glyphicon glyphicon-log-out"></span> Wyloguj się&nbsp;&nbsp;&nbsp;</a>
+                        {% else %}
+                            <a href="/koszyk"><span class="glyphicon glyphicon-shopping-cart"></span> Twój koszyk&nbsp;&nbsp;&nbsp;</a>
+                            <a href="/login"><span class="glyphicon glyphicon-log-in"></span> Logowanie&nbsp;&nbsp;&nbsp;</a>
+                            <a href="/register"><span class="glyphicon glyphicon-pencil"></span> Rejestracja </a>
+                        {% endif %}
                     </div>
                 </ul>
             </div>
