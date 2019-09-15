@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% block content %}
+
+<body>
+    <br>
+    <div class="col-xs-3 col-sm-3 col-md-3"></div>
+    <div class="col-xs-6 col-sm-6 col-md-6">
+            <div class="row">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="col-xs-8 col-sm-8 col-md-8">
+                            <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+                                <ol class="carousel-indicators">
+                                    <li data-target="#carousel-example-generic" data-slide-to="0"
+                                class="active"></li>
+                                    <li data-target="#carousel-example-generic" data-slide-to="1"
+                                class="active"></li>
+                                </ol>
+                                <div class="carousel-inner">
+                                   <div class="item active" alt="">
+                                        <div style="text-align: center; margin-right: 000px; margin-bottom: 50px; color: #3c3c3c;font-family: Impact; font-size: 70px">
+                                            <img src="{{ url_for('static', filename=imagesource[0]) }}" width="300px" height="300px" />
+                                        </div>
+                                    </div>
+                                    <div class="item " alt="">
+                                        <div style="text-align: center; margin-right: 000px; margin-bottom: 50px; color: #3c3c3c;font-family: Impact; font-size: 70px">
+                                                <img src="{{ url_for('static', filename=imagesource[1]) }}" width="300px" height="300px" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+                                    <span class="glyphicon glyphicon-chevron-left"></span>
+                                </a>
+                                <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+                                    <span class="glyphicon glyphicon-chevron-right"></span>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-xs-4 col-sm-4 col-md-4" align="center">
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-12 col-md-12">
+                                    <h3>
+                                        <strong> {{ records[productId-1][1]}} </strong>
+                                    </h3>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-12 col-md-12">
+                                    <p> <strong> {{ records[productId-1][2]}},00 PLN</strong> </p>
+                                </div>
+                            </div>
+                            <br><br><br><br><br><br><br><br><br>
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-12 col-md-12">
+                                    <p> <strong>Dostępne sztuki: {{ records[productId-1][3]}}</strong> </p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-12 col-md-12">
+                                    <button type="button" class="btn btn-success btn-md add_to_cart">
+                                        Dodaj do koszyka
+                                        <span
+                                            class="glyphicon glyphicon-shopping-cart">
+                                        </span>
+                                    </button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" align="center" >
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <p> <strong>Specyfikacja</strong></p>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row" align="center">
+                            <div class="col-xs-12 col-sm-12 col-md-12" align="center">
+                                <h5>
+                                    Procesor: {{ records[productId-1][6]}}
+                                </h5>
+                            </div>
+                        </div>
+                         <div class="row" align="center">
+                            <div class="col-xs-12 col-sm-12 col-md-12" align="center">
+                                <h5>
+                                    Karta Graficzna: {{ records[productId-1][7]}}
+                                </h5>
+                            </div>
+                        </div>
+                         <div class="row" align="center">
+                            <div class="col-xs-12 col-sm-12 col-md-12" align="center">
+                                <h5>
+                                    RAM: {{ records[productId-1][8]}}
+                                </h5>
+                            </div>
+                        </div>
+                         <div class="row" align="center">
+                            <div class="col-xs-12 col-sm-12 col-md-12" align="center">
+                                <h5>
+                                    SSD: {{ records[productId-1][9]}}GB
+                                </h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+     </div>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+</body>
+
+
+{%  endblock %}
+
+
+

@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block content %}
+
+<body>
+<br>
+{% for i in range(0, number_of_rows1, 2) %}
+    <div class="row">
+        <div class="col-xs-1 col-sm-1 col-md-1" ></div>
+        <div class="col-xs-4 col-sm-4 col-md-4" align="center" >
+            <div class="panel panel-default">
+                <div class="panel-body center-block">
+                    <div class="row">
+                        <div class="col-xs-1 col-sm-1 col-md-1" align="center" ></div>
+                        <div class="col-xs-4 col-sm-4 col-md-4" align="center" >
+                            <a href="/komputery/produkt/{{records[i][0]}}">
+                                <img src="{{ url_for('static', filename=imagesource[i]) }}" width="200px" height="200px" />
+                            </a>
+                        </div>
+                        <div class="col-xs-7 col-sm-7 col-md-7" >
+                            <div class="row">
+                                <h1 style="font-family: Arial;text-align: justify-all; font-size: large"><strong> {{ records[i][1]}}</strong></h1>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <h5>
+                                    Procesor: {{ records[i][6]}}
+                                </h5>
+                            </div>
+                            <div class="row" >
+                                <h5>
+                                    Karta Graficzna: {{ records[i][7]}}
+                                </h5>
+                            </div>
+                            <br><br><br>
+                            <div class="row" align="right" style="margin-right: 10px">
+                                <p style="font-family: Arial;text-align: justify-all; font-size: medium "> {{ records[i][2]}},00 PLN</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-1 col-sm-1 col-md-1"  ></div>
+        <div class="col-xs-4 col-sm-4 col-md-4" align="center" >
+            <div class="panel panel-default">
+                <div class="panel-body center-block">
+                    <div class="row">
+                        <div class="col-xs-5 col-sm-5 col-md-5" >
+                            <a href="/komputery/produkt/{{records[i+1][0]}}">
+                                <img src="{{ url_for('static', filename=imagesource[i+1]) }}" width="300px" height="200px" />
+                            </a>
+                        </div>
+                       <div class="col-xs-7 col-sm-7 col-md-7" >
+                            <div class="row">
+                                <h1 style="font-family: Arial;text-align: justify-all; font-size: large"><strong> {{ records[i][1]}}</strong></h1>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <h5>
+                                    Procesor: {{ records[i][6]}}
+                                </h5>
+                            </div>
+                            <div class="row" >
+                                <h5>
+                                    Karta Graficzna: {{ records[i][7]}}
+                                </h5>
+                            </div>
+                            <br><br><br>
+                            <div class="row" align="right" style="margin-right: 10px">
+                                <p style="font-family: Arial;text-align: justify-all; font-size: medium "> {{ records[i][2]}},00 PLN</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-1 col-sm-1 col-md-1"  >
+        </div>
+    </div>
+{% endfor %}
+</body>
+{%  endblock %}
+
+
+

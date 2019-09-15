@@ -13,6 +13,41 @@ app.secret_key = 'super secret key'
 def homepage():
     return render_template("homepage.html")
 
+@app.route('/komputery')
+def komputery():
+    try:
+        c, conn = connection()
+        sql_select_Query = "select * from komputery"
+        c.execute(sql_select_Query)
+        records = c.fetchall()
+        number_of_rows = c.rowcount
+        number_of_rows2 = number_of_rows // 2
+        i=0
+        link =[]
+        for rows in records:
+            link.append("images/product/" + records[i][4]+".jpg")
+            i=i+1
+        return render_template("komputery.html", records=records, products=rows, imagesource=link, number_of_rows1=number_of_rows, number_of_rows2=number_of_rows2)
+
+    except Exception as e:
+        error = "Błąd ładaowania produktów z bazy danych."
+        flash(error)
+        return render_template("komputery.html")
+
+
+@app.route('/komputery/produkt/<int:productId>')
+def productPage(productId=1):
+    c, conn = connection()
+    sql_select_Query = "select * from komputery"
+    c.execute(sql_select_Query)
+    records = c.fetchall()
+    number_of_rows = c.rowcount
+    number_of_rows2 = number_of_rows // 2
+    image = []
+    image.append("images/product/" + records[productId-1][4] + ".jpg")
+    image.append("images/product/" + records[productId-1][5] + ".jpg")
+    return render_template("produkt.html", records=records, imagesource=image, number_of_rows1=number_of_rows, number_of_rows2=number_of_rows2, productId=productId)
+
 
 def login_required(f):
     @wraps(f)
