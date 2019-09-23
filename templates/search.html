@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block content %}
+	<div class="row">
+		<div class="col-xs-2 col-sm-2 col-md-2">
+		</div>
+		<div class="col-xs-8 col-sm-8 col-md-8">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<span class="glyphicon glyphicon-search"></span>
+					Wyniki wyszukiwania
+				</div>
+				<div class="panel-body">
+					<div class="row">
+                        <div class="col-xs-4 col-sm-4 col-md-4" align="center">
+                            <h4>
+                                <strong>Komputery</strong>
+                            </h4>
+                            <br>
+                                {% if j_computers==0 %}
+                                    <div class="row" align="center">
+                                        <h4>
+                                            Brak wyników wyszukiwania.
+                                        </h4>
+                                    </div>
+                                {% else %}
+                                    {% for i in range(0,j_computers,1) %}
+                                        <div class="row">
+                                            <div class="col-xs-6 col-sm-6 col-md-6" align="center">
+                                                <a href="/komputery/produkt/{{records_computers[products_computers[i]][0]}}">
+                                                    <img src="{{ url_for('static', filename=imagesource_computers[i]) }}" width="150px" height="150px" />
+                                                </a>
+                                            </div>
+                                            <div class="col-xs-6 col-sm-6 col-md-6">
+                                                <div class="row">
+                                                    <h5>
+                                                        <strong>{{ records_computers[products_computers[i]][1] }}</strong>
+                                                    </h5>
+                                                </div>
+                                                <div class="row" align="left">
+                                                    <h6>
+                                                        {{ records_computers[products_computers[i]][6] }}
+                                                    </h6>
+                                                </div>
+                                                <div class="row" align="left">
+                                                    <h6>
+                                                        {{ records_computers[products_computers[i]][7] }}
+                                                    </h6>
+                                                </div>
+                                                <br>
+                                                <div class="row" align="right">
+                                                    <h5>
+                                                        <strong>{{ records_computers[products_computers[i]][2] }} PLN </strong>
+                                                    </h5>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <br><br>
+                                    {% endfor %}
+                                {% endif %}
+                        </div>
+                        <div class="col-xs-4 col-sm-4 col-md-4" align="center">
+                            <h4>
+                                <strong>Laptopy</strong>
+                            </h4>
+                            <br><br>
+                        </div>
+                        <div class="col-xs-4 col-sm-4 col-md-4" align="center">
+                            <h4>
+                                <strong>Monitory</strong>
+                            </h4>
+                            <br><br>
+                        </div>
+                    </div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

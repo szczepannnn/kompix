@@ -97,6 +97,29 @@ def login_page():
         return render_template("login.html")
 
 
+@app.route('/search', methods=['POST'])
+def search():
+    c, conn = connection()
+    sql_select_Query = "select * from komputery"
+    c.execute(sql_select_Query)
+    records_computers = c.fetchall()
+    i_computers = 0
+    j_computers = 0
+    productsToRender_computer = []
+    if request.form["search"].lower() is "":
+        flash("Puste wyszukiwanie.")
+    else:
+        for rows in records_computers:
+            if request.form["search"].lower() in records_computers[i_computers][1].lower():
+                productsToRender_computer.append(i_computers)
+                j_computers = j_computers + 1
+            i_computers = i_computers + 1
+    link_computers = []
+    for product in productsToRender_computer:
+        link_computers.append("images/product/" + records_computers[product][4] + ".jpg")
+    return render_template('search.html', products_computers=productsToRender_computer, imagesource_computers=link_computers, records_computers=records_computers, j_computers=j_computers)
+
+
 class RegistrationForm(Form):
     username = TextField('Nazwa użytkownika:', [validators.Length(min=4, max=20)])
     email = TextField('Adres e-mail:', [validators.Length(min=6, max=50)])
