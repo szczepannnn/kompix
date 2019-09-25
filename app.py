@@ -1,4 +1,4 @@
-from flask import Flask, render_template, flash, request, url_for, redirect, session
+from flask import Flask, render_template, flash, request, url_for, redirect, session, jsonify
 from dbconnect import connection
 from wtforms import Form, PasswordField, BooleanField, TextField, validators
 from passlib.hash import sha256_crypt
@@ -9,9 +9,71 @@ app = Flask(__name__)
 app.secret_key = 'super secret key'
 
 
+@app.route('/add_to_cart', methods=["GET", 'POST'])
+def addToCart():
+    ProductID=int(request.form["productId"])
+    print(ProductID)
+    c, conn = connection()
+
+    c.execute("SELECT * FROM koszyk WHERE username = (%s)", (session['username'],))
+
+    if c.rowcount > 0:
+        records = c.fetchall()
+        records = list(records)
+        new = records[0][2] + ", " + str(ProductID)
+        print(new)
+        print(session['username'])
+        c.execute("UPDATE koszyk SET products = (%s) WHERE username = (%s)", (new, session['username']))
+        print("Inserted", c.rowcount, "row(s) of data.")
+        flash("Produkt został dodany do koszyka.")
+        conn.commit()
+        c.close()
+        conn.close()
+        gc.collect()
+
+        c, conn = connection()
+        c.execute("SELECT * FROM komputery WHERE uid = (%s)", (ProductID,))
+        records1 = c.fetchall()
+        new1 = records1[0][3]-1;
+        c.execute("UPDATE komputery SET iloscsztuk = (%s) WHERE uid = (%s)", (new1, ProductID))
+        print("Inserted", c.rowcount, "row(s) of data.")
+        conn.commit()
+        c.close()
+        conn.close()
+        gc.collect()
+
+    else:
+        c.execute("INSERT INTO koszyk (username, products) VALUES (%s, %s) ", (session['username'], ProductID))
+        print("Inserted", c.rowcount, "row(s) of data.")
+        conn.commit()
+        flash("Koszyk został stworzony oraz produkt został dodany do koszyka.")
+        c.close()
+        conn.close()
+        gc.collect()
+        c, conn = connection()
+        c.execute("SELECT * FROM komputery WHERE uid = (%s)", (ProductID,))
+        records2 = c.fetchall()
+        new2 = records2[0][3] - 1;
+        c.execute("UPDATE komputery SET iloscsztuk = (%s) WHERE uid = (%s)", (new2, ProductID))
+        print("Inserted", c.rowcount, "row(s) of data.")
+        conn.commit()
+        c.close()
+        conn.close()
+        gc.collect()
+
+    return jsonify(status="success")
+
+
+@app.route('/koszyk')
+def koszyk():
+
+    return render_template("koszyk.html")
+
+
 @app.route('/')
 def homepage():
     return render_template("homepage.html")
+
 
 @app.route('/komputery')
 def komputery():

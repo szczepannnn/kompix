@@ -1,6 +1,11 @@
 {% extends "base.html" %}
 {% block content %}
-
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script src="/static/js/helpers.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.7.0/underscore-min.js"></script>
 <body>
     <br>
     <div class="col-xs-3 col-sm-3 col-md-3"></div>
@@ -57,19 +62,50 @@
                             </div>
                             <div class="row">
                                 <div class="col-xs-12 col-sm-12 col-md-12">
-                                    <button type="button" class="btn btn-success btn-md add_to_cart">
-                                        Dodaj do koszyka
-                                        <span
-                                            class="glyphicon glyphicon-shopping-cart">
-                                        </span>
-                                    </button>
+                                     {% if session.logged_in %}
+                                        {% if records[productId-1][3]>0 %}
+                                         <button type="button" class="btn btn-success btn-md add_to_cart" id="{{ productId }}">
+                                            Dodaj do koszyka
+                                            <span
+                                                class="glyphicon glyphicon-shopping-cart">
+                                            </span>
+                                        </button>
+                                        {% else %}
+                                        <button type="button" class="btn btn-success btn-md" id="{{ productId }}" disabled>
+                                            Dodaj do koszyka
+                                            <span
+                                                class="glyphicon glyphicon-shopping-cart">
+                                            </span>
+                                        </button>
+                                        {% endif %}
+                                    {% else %}
+                                        <a href="/login/" class="btn btn-success btn-md">
+                                            Zaloguj się, aby dodać do koszyka.
+                                                <span
+                                                    class="glyphicon glyphicon-shopping-cart">
+                                                </span>
+                                         </a>
+                                    {% endif %}
                                 </div>
-
+                                <script type="text/javascript">
+                                $(document).ready(function() {
+                                    $(".add_to_cart").click(function(event) {
+                                        $.post('/add_to_cart', {
+                                            productId: $(event.target).attr("id"),
+                                        }).done(function(data) {
+                                            if(data.status == "success") {
+                                                window.location.reload(false);
+                                            }
+                                        });
+                                    });
+                                });
+                                </script>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+
             <div class="row" align="center" >
                 <div class="panel panel-default">
                     <div class="panel-heading">
@@ -107,12 +143,8 @@
                     </div>
                 </div>
             </div>
-
      </div>
-    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
 </body>
-
 
 {%  endblock %}
 
