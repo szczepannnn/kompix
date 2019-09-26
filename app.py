@@ -9,41 +9,17 @@ app = Flask(__name__)
 app.secret_key = 'super secret key'
 
 
-@app.route('/add_to_cart', methods=["GET", 'POST'])
-def addToCart():
+@app.route('/add_to_cart_komp', methods=["GET", "POST"])
+def addToCartKomp():
     ProductID=int(request.form["productId"])
     print(ProductID)
     c, conn = connection()
 
     c.execute("SELECT * FROM koszyk WHERE username = (%s)", (session['username'],))
+    records = c.fetchall()
 
-    if c.rowcount > 0:
-        records = c.fetchall()
-        records = list(records)
-        new = records[0][2] + ", " + str(ProductID)
-        print(new)
-        print(session['username'])
-        c.execute("UPDATE koszyk SET products = (%s) WHERE username = (%s)", (new, session['username']))
-        print("Inserted", c.rowcount, "row(s) of data.")
-        flash("Produkt został dodany do koszyka.")
-        conn.commit()
-        c.close()
-        conn.close()
-        gc.collect()
-
-        c, conn = connection()
-        c.execute("SELECT * FROM komputery WHERE uid = (%s)", (ProductID,))
-        records1 = c.fetchall()
-        new1 = records1[0][3]-1;
-        c.execute("UPDATE komputery SET iloscsztuk = (%s) WHERE uid = (%s)", (new1, ProductID))
-        print("Inserted", c.rowcount, "row(s) of data.")
-        conn.commit()
-        c.close()
-        conn.close()
-        gc.collect()
-
-    else:
-        c.execute("INSERT INTO koszyk (username, products) VALUES (%s, %s) ", (session['username'], ProductID))
+    if c.rowcount == 0:
+        c.execute("INSERT INTO koszyk (username, products_komp) VALUES (%s, %s) ", (session['username'], ProductID))
         print("Inserted", c.rowcount, "row(s) of data.")
         conn.commit()
         flash("Koszyk został stworzony oraz produkt został dodany do koszyka.")
@@ -61,13 +37,120 @@ def addToCart():
         conn.close()
         gc.collect()
 
+    else:
+        if records[0][2] == "":
+            records = list(records)
+            new = str(ProductID)
+            print(new)
+            print(session['username'])
+            c.execute("UPDATE koszyk SET products_komp = (%s) WHERE username = (%s)", (new, session['username']))
+            print("Inserted", c.rowcount, "row(s) of data.")
+            flash("Produkt został dodany do koszyka.")
+            conn.commit()
+            c.close()
+            conn.close()
+            gc.collect()
+
+            c, conn = connection()
+            c.execute("SELECT * FROM komputery WHERE uid = (%s)", (ProductID,))
+            records1 = c.fetchall()
+            new1 = records1[0][3] - 1;
+            c.execute("UPDATE komputery SET iloscsztuk = (%s) WHERE uid = (%s)", (new1, ProductID))
+            print("Inserted", c.rowcount, "row(s) of data.")
+            conn.commit()
+            c.close()
+            conn.close()
+            gc.collect()
+        else:
+            records = list(records)
+            new = records[0][2] + ", " + str(ProductID)
+            print(new)
+            print(session['username'])
+            c.execute("UPDATE koszyk SET products_komp = (%s) WHERE username = (%s)", (new, session['username']))
+            print("Inserted", c.rowcount, "row(s) of data.")
+            flash("Produkt został dodany do koszyka.")
+            conn.commit()
+            c.close()
+            conn.close()
+            gc.collect()
+
+            c, conn = connection()
+            c.execute("SELECT * FROM komputery WHERE uid = (%s)", (ProductID,))
+            records1 = c.fetchall()
+            new1 = records1[0][3]-1;
+            c.execute("UPDATE komputery SET iloscsztuk = (%s) WHERE uid = (%s)", (new1, ProductID))
+            print("Inserted", c.rowcount, "row(s) of data.")
+            conn.commit()
+            c.close()
+            conn.close()
+            gc.collect()
+
     return jsonify(status="success")
 
 
-@app.route('/koszyk')
-def koszyk():
+@app.route('/remove_from_cart_komp', methods=["GET", "POST"])
+def removeFromCartKomp():
+    ProductID=int(request.form["productId"])
+    c, conn = connection()
 
-    return render_template("koszyk.html")
+    c.execute("SELECT * FROM koszyk WHERE username = (%s)", (session['username'],))
+    records_komp=c.fetchall()
+    products = records_komp[0][2]
+    splitedproducts = []
+    splitedproducts = products.split(", ");
+    j_computers = len(splitedproducts)
+    print(j_computers)
+    new = ""
+    for i in range(0, j_computers):
+        if i != j_computers:
+            if i != ProductID:
+                new = new + splitedproducts[i] + ", "
+                print(new)
+            else:
+                c.execute("SELECT * FROM komputery WHERE uid = (%s)", (splitedproducts[i],))
+                records2 = c.fetchall()
+                new2 = records2[0][3] + 1
+                c.execute("UPDATE komputery SET iloscsztuk = (%s) WHERE uid = (%s)", (new2, splitedproducts[i],))
+                conn.commit()
+    new = new[:-2]
+
+    c.execute("UPDATE koszyk SET products_komp = (%s) WHERE username = (%s)", (new, session['username'],))
+    conn.commit()
+    c.close()
+    conn.close()
+    gc.collect()
+
+    return jsonify(status="success")
+
+
+@app.route('/koszyk', methods=["GET", "POST"])
+def koszyk():
+    c, conn = connection()
+    sql_select_Query = "select * from koszyk WHERE username = (%s)"
+    c.execute(sql_select_Query,(session['username'],))
+    records_koszyk = c.fetchall()
+    d, conn = connection()
+    sql_select_Query = "select * from komputery"
+    d.execute(sql_select_Query)
+    records_komputery = d.fetchall()
+    if c.rowcount == 0 or records_koszyk[0][2] == "":
+        return render_template("koszyk.html", j_computers=0, suma=0)
+    else:
+        products = records_koszyk[0][2]
+        splitedproducts = []
+        splitedproducts = products.split(", ");
+
+        j_computers = len(splitedproducts)
+        i=0
+        suma=0
+        for i in range(0, j_computers):
+            splitedproducts[i] = int(splitedproducts[i])-1
+            suma = suma+records_komputery[int(splitedproducts[i])][2]
+        link_computers = []
+        for product in splitedproducts:
+            link_computers.append("images/product/" + records_komputery[int(product)][4] + ".jpg")
+
+        return render_template("koszyk.html", products_computers=splitedproducts,imagesource_computers=link_computers, records_computers=records_komputery, j_computers=j_computers, suma=suma)
 
 
 @app.route('/')
