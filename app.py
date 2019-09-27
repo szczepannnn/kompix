@@ -4,9 +4,128 @@ from wtforms import Form, PasswordField, BooleanField, TextField, validators
 from passlib.hash import sha256_crypt
 from functools import wraps
 import gc
+import stripe
+from stripe import Customer, Charge
+
+
 
 app = Flask(__name__)
 app.secret_key = 'super secret key'
+
+pub_key = 'pk_test_kTJOiboHBxPEtMuTarqpLoY500bwth8eUA'
+secret_key = 'sk_test_G3tcIN8o0dpUi7EXfoqvdBwA00iLsAUROl'
+
+stripe.api_key = secret_key
+
+
+@app.route('/thanks', methods=['POST', 'GET'])
+def thanks():
+    print("tutaj")
+    c, conn = connection()
+    sql_select_Query = "select * from koszyk WHERE username = (%s)"
+    c.execute(sql_select_Query, (session['username'],))
+    records_koszyk = c.fetchall()
+    c.execute("INSERT INTO oplacone (username, products_komp, adres_dostawy, telefon) VALUES (%s, %s, %s, %s)", (records_koszyk[0][1],records_koszyk[0][2],records_koszyk[0][3],records_koszyk[0][4]))
+    c.execute("DELETE FROM koszyk WHERE username=(%s)", (session['username'],))
+    conn.commit()
+    c.close()
+    conn.close()
+    gc.collect()
+    return render_template('thanks.html')
+
+
+@app.route('/stripe', methods=['POST'])
+def stripe1():
+    c, conn = connection()
+    sql_select_Query = "select * from koszyk WHERE username = (%s)"
+    c.execute(sql_select_Query, (session['username'],))
+    records_koszyk = c.fetchall()
+    d, conn = connection()
+    sql_select_Query = "select * from komputery"
+    d.execute(sql_select_Query)
+    records_komputery = d.fetchall()
+    if c.rowcount == 0 or records_koszyk[0][2] == "":
+        return render_template("koszyk.html", j_computers=0, suma=0)
+    else:
+        products = records_koszyk[0][2]
+        splitedproducts = []
+        splitedproducts = products.split(", ");
+
+        j_computers = len(splitedproducts)
+        i = 0
+        suma = 0
+        for i in range(0, j_computers):
+            splitedproducts[i] = int(splitedproducts[i]) - 1
+            suma = suma + records_komputery[int(splitedproducts[i])][2]
+
+    customer = stripe.Customer.create(email=request.form['stripeEmail'], source=request.form['stripeToken'])
+    suma = suma*100
+    charge = stripe.Charge.create(
+        customer=customer.id,
+        amount=suma,
+        currency='PLN',
+        description='Twój koszyk'
+    )
+    return redirect(url_for('thanks'))
+
+class Payform(Form):
+    street = TextField('Ulica:', [validators.Length(min=3, max=20)])
+    housenumber = TextField('Numer domu/mieszkania:', [validators.Length(min=0, max=3)])
+    city = TextField('Miasto:', [validators.Length(min=3, max=20)])
+    postalcode = TextField('Kod pocztowy:', [validators.Length(min=6, max=7)])
+    phone = TextField('Numer telefonu:', [validators.Length(min=6, max=10)])
+
+
+@app.route('/pay/', methods=["GET", "POST"])
+def pay():
+    try:
+        form = Payform(request.form)
+        c, conn = connection()
+        sql_select_Query = "select * from koszyk WHERE username = (%s)"
+        c.execute(sql_select_Query, (session['username'],))
+        records_koszyk = c.fetchall()
+        d, conn = connection()
+        sql_select_Query = "select * from komputery"
+        d.execute(sql_select_Query)
+        records_komputery = d.fetchall()
+        if c.rowcount == 0 or records_koszyk[0][2] == "":
+            return render_template("koszyk.html", j_computers=0, suma=0)
+        else:
+            products = records_koszyk[0][2]
+            splitedproducts = []
+            splitedproducts = products.split(", ");
+
+            j_computers = len(splitedproducts)
+            i = 0
+            suma = 0
+            for i in range(0, j_computers):
+                splitedproducts[i] = int(splitedproducts[i]) - 1
+                suma = suma + records_komputery[int(splitedproducts[i])][2]
+
+        print(suma)
+
+        if request.method == "POST" and form.validate():
+            street = form.street.data
+            housenumber = form.housenumber.data
+            city = form.city.data
+            postalcode = form.postalcode.data
+
+            phone = form.phone.data
+            adress = street + "," + housenumber + "," + city + "," + postalcode
+
+            e, conn = connection()
+            e.execute("UPDATE koszyk SET adres_dostawy = (%s), telefon = (%s)  WHERE username = (%s)", (adress, phone, session['username'], ))
+            flash("Dane zapisane")
+            conn.commit()
+            e.close()
+            conn.close()
+            gc.collect()
+            return render_template("pay.html", suma=suma, pub_key=pub_key)
+
+        return render_template("pay.html", form=form, suma=suma, pub_key=pub_key)
+    except Exception as e:
+        flash(str(e))
+        return render_template("pay.html", form=form)
 
 
 @app.route('/add_to_cart_komp', methods=["GET", "POST"])

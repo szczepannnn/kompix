@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block content %}
+
+<div class="row">
+    <div class="col-xs-1 col-sm-2 col-md-3 col-lg-4 col-xl-5" align="center" > </div>
+    <div class="col-xs-10 col-sm-8 col-md-6 col-lg-4 col-xl-2" align="center" >
+        <br>
+        <h3>1. Uzupełnij dane wysyłki: </h3>
+        <br>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-1 col-sm-2 col-md-3 col-lg-4 col-xl-5" align="center" > </div>
+    <div class="col-xs-10 col-sm-8 col-md-6 col-lg-4 col-xl-2" align="center" >
+        <div class="container-fluid">
+            <form method=post action="/pay/" class="form" role="form">
+			{{ form.csrf_token }}
+            <dl>
+				{{wtf.form_field(form.street, class='form-control', placeholder='Ulica' )}}
+                {{wtf.form_field(form.housenumber, class='form-control', placeholder='Numer domu/mieszkania' )}}
+                {{wtf.form_field(form.city, class='form-control', placeholder='Miasto' )}}
+                {{wtf.form_field(form.postalcode, class='form-control', placeholder='Kod pocztowy' )}}
+                {{wtf.form_field(form.phone, class='form-control', placeholder='Numer telefonu' )}}
+			</dl>
+			<p><input type=submit class='btn btn-primary btn-primary'>
+		</form>
+
+		{% if error %}
+			<p class="error"><strong>Błąd:</strong>{{error}}</p>
+		{% endif %}
+        </div>
+        <p> {{ error }}</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-1 col-sm-2 col-md-3 col-lg-4 col-xl-5" align="center" > </div>
+    <div class="col-xs-10 col-sm-8 col-md-6 col-lg-4 col-xl-2" align="center" >
+        <br>
+        <h3>2. Zapłać: </h3>
+        <br>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-1 col-sm-2 col-md-3 col-lg-4 col-xl-5" align="center" > </div>
+    <div class="col-xs-10 col-sm-8 col-md-6 col-lg-4 col-xl-2" align="center" >
+        <form action="{{ url_for('stripe1') }}" method="POST">
+          <script
+            src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+            data-key="{{ pub_key }}"
+            data-amount="{{ suma }}00"
+            data-name="Kompix"
+            data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
+            data-locale="auto"
+            data-currency="PLN">
+          </script>
+        </form>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+{%  endblock %}
