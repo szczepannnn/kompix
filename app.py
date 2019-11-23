@@ -281,7 +281,7 @@ def homepage():
 def komputery():
     try:
         c, conn = connection()
-        sql_select_Query = "select * from komputery"
+        sql_select_Query = "select * from komputery WHERE kategoria='komputer'"
         c.execute(sql_select_Query)
         records = c.fetchall()
         number_of_rows = c.rowcount
@@ -293,13 +293,58 @@ def komputery():
             i=i+1
         return render_template("komputery.html", records=records, products=rows, imagesource=link, number_of_rows1=number_of_rows, number_of_rows2=number_of_rows2)
 
+
     except Exception as e:
         error = "Błąd ładaowania produktów z bazy danych."
         flash(error)
         return render_template("komputery.html")
 
 
-@app.route('/komputery/produkt/<int:productId>')
+@app.route('/laptopy')
+def laptop():
+    try:
+        c, conn = connection()
+        sql_select_Query = "select * from komputery WHERE kategoria='laptop'"
+        c.execute(sql_select_Query)
+        records = c.fetchall()
+        number_of_rows = c.rowcount
+        number_of_rows2 = number_of_rows // 2
+        i = 0
+        link = []
+        for rows in records:
+            link.append("images/product/" + records[i][4] + ".jpg")
+            i = i + 1
+        return render_template("laptopy.html", records=records, products=rows, imagesource=link,
+                               number_of_rows1=number_of_rows, number_of_rows2=number_of_rows2)
+
+    except Exception as e:
+        error = "Błąd ładaowania produktów z bazy danych."
+        flash(error)
+        return render_template("laptopy.html")
+
+@app.route('/wszystko')
+def wszystko():
+    try:
+        c, conn = connection()
+        sql_select_Query = "select * from komputery"
+        c.execute(sql_select_Query)
+        records = c.fetchall()
+        number_of_rows = c.rowcount
+        number_of_rows2 = number_of_rows // 2
+        i = 0
+        link = []
+        for rows in records:
+            link.append("images/product/" + records[i][4] + ".jpg")
+            i = i + 1
+        return render_template("komputery.html", records=records, products=rows, imagesource=link,
+                               number_of_rows1=number_of_rows, number_of_rows2=number_of_rows2)
+
+    except Exception as e:
+        error = "Błąd ładaowania produktów z bazy danych."
+        flash(error)
+        return render_template("laptopy.html")
+
+@app.route('/produkt/<int:productId>')
 def productPage(productId=1):
     c, conn = connection()
     sql_select_Query = "select * from komputery"
@@ -327,6 +372,29 @@ def login_required(f):
 @app.route('/logout/')
 @login_required
 def logout():
+    c, conn = connection()
+
+    c.execute("SELECT * FROM koszyk WHERE username = (%s)", (session['username'],))
+    records_komp = c.fetchall()
+    products = records_komp[0][2]
+    splitedproducts = []
+    splitedproducts = products.split(", ");
+    j_computers = len(splitedproducts)
+    print(j_computers)
+    new = ""
+    for i in range(0, j_computers):
+        if i != j_computers:
+            c.execute("SELECT * FROM komputery WHERE uid = (%s)", (splitedproducts[i],))
+            records2 = c.fetchall()
+            new2 = records2[0][3] + 1
+            c.execute("UPDATE komputery SET iloscsztuk = (%s) WHERE uid = (%s)", (new2, splitedproducts[i],))
+            conn.commit()
+
+    c.execute("UPDATE koszyk SET products_komp = (%s) WHERE username = (%s)", (new, session['username'],))
+    conn.commit()
+    c.close()
+    conn.close()
+    gc.collect()
     session.clear()
     flash("Wylogowanie przebiegło pomyślnie")
     gc.collect()
