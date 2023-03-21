@@ -438,7 +438,7 @@ def search():
     i_computers = 0
     j_computers = 0
     productsToRender_computer = []
-    if request.form["search"].lower() is "":
+    if request.form["search"].lower() == "":
         flash("Puste wyszukiwanie.")
     else:
         for rows in records_computers:
