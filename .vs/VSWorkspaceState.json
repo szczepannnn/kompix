@@ -1,12 +1,7 @@
 {
   "ExpandedNodes": [
     "",
-    "\\static",
-    "\\static\\images",
-    "\\venv",
-    "\\venv\\Lib",
-    "\\venv\\Lib\\site-packages",
-    "\\venv\\Lib\\site-packages\\flask"
+    "\\static\\images"
   ],
   "SelectedNode": "\\app.py",
   "PreviewInSolutionExplorer": false
